@@ -6,7 +6,7 @@ const schema = new Schema(
         title: { type: String, required: true, index: true },
         description: { type: String },
         category: { type: String, default: "", enum: [], index: true },
-        image: { type: String, default: "https://www.shutterstock.com/shutterstock/photos/2199111735/display_1500/stock-photo-antalya-turkey-september-newly-released-iphone-pro-mockup-set-with-back-and-front-2199111735.jpg" },
+        image: { type: String, default: ""},
         price: { type: Number, default: 10 },
         stock: { type: Number, default: 10 },
         onsale: { type: Boolean, default: false },

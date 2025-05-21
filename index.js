@@ -10,6 +10,7 @@ import dbConnect from "./src/helpers/dbConnect.helper.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "./src/middlewares/passport.mid.js";
 
 const server = express();
 const port = process.env.PORT || 8080;
@@ -28,6 +29,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static("public"));
 server.use(morgan("dev"));
+server.use(passport.initialize());
 
 server.use(
     session({
