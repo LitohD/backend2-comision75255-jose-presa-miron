@@ -8,8 +8,8 @@ class Manager {
     }
     createOne = async (data) => await this.model.create(data);
     readAll = async (filter) => await this.model.find(filter).lean();
-    readById = async (id) => await this.model.findeOne({ _id: id }).lean();
-    readBy = async (filter) => await this.model.findeOne(filter).lean();
+    readById = async (id) => await this.model.findOne({ _id: id }).lean();
+    readBy = async (filter) => await this.model.findOne(filter).lean();
     updateById = async (id, data) => await this.model.findByIdAndUpdate(id, data, { new: true });
     destroyById = async (id) => await this.model.findByIdAndDelete(id);
 }
