@@ -1,48 +1,42 @@
-import "dotenv/config.js";
 import express from "express";
-import { engine } from "express-handlebars";
-import morgan from "morgan";
 import __dirname from "./utils.js";
-import indexRouter from "./src/routers/index.router.js";
-import pathHandler from "./src/middlewares/pathHandler.mid.js";
-import errorHandler from "./src/middlewares/errorHandler.mid.js";
-import dbConnect from "./src/helpers/dbConnect.helper.js";
+import env from "./helpers/env.helper.js";
+import path from "path";
+import morgan from "morgan";
+import { engine } from "express-handlebars";
+import pathHandler from "./middlewares/pathHandler.mid.js";
+import errorHandler from "./middlewares/errorHandler.mid.js";
+import indexRouter from "./routes/index.routes.js";
 import cookieParser from "cookie-parser";
-import session from "express-session";
-import MongoStore from "connect-mongo";
-import passport from "./src/middlewares/passport.mid.js";
+import argvsHelper from "./helpers/argvs.helper.js";
+import dbConnect from "./helpers/dbConnect.helper.js";
 
 const server = express();
-const port = process.env.PORT || 8080;
+const PORT = env.PORT;
 const ready = async () => {
-    console.log("server ready on port " + port);
-    await dbConnect(process.env.LINK_DB);
+    console.log(`Listennig to port ${PORT} and mode: ${argvsHelper.mode}`);
+    if (env.PERSISTENCE === "mongo") {
+        await dbConnect(env.MONGO_URL);
+    }
 };
-server.listen(port, ready);
+server.listen(PORT, ready);
 
-server.engine("handlebars", engine());
-server.set("view engine", "handlebars");
-server.set("views", __dirname + "/src/views");
-
-server.use(cookieParser(process.env.SECRET));
+server.use(cookieParser(env.SECRET_COOKIE));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-server.use(express.static("public"));
+server.use(express.static(path.join(__dirname, "..", "public")));
 server.use(morgan("dev"));
-server.use(passport.initialize());
 
-server.use(
-    session({
-        secret: process.env.SECRET,
-        resave: true,
-        saveUninitialized: true,
-        cookies: { maxAge: 60 * 1000 },
-        store: new MongoStore({
-            mongoUrl: process.env.LINK_DB,
-        }),
+server.engine(
+    "handlebars",
+    engine({
+        helpers: {
+            eq: (a, b) => a === b,
+        },
     })
 );
-
+server.set("view engine", "handlebars");
+server.set("views", path.join(__dirname, "views"));
 server.use("/", indexRouter);
 server.use(errorHandler);
 server.use(pathHandler);

@@ -1,26 +1,29 @@
 import jwt from "jsonwebtoken";
+import env from "../helpers/env.helper.js"
 
-const createToken = (data) => {
+export const createToken = (data) => {
     try {
         const token = jwt.sign(
-            data, process.env.SECRET,
-            { expiresIn: 30 * 24 * 60 * 60 * 1000 }
-        )
-        return token
+            data,
+            env.SECRET_KEY,
+            { expiresIn: 7 * 24 * 60 * 60 }
+        );
+        return token;
     } catch (error) {
-        error.statusCode = 401
-        throw error
+        error.statusCode = 401;
+        throw error;
     }
-}
+};
 
-const verifyToken = (token) => {
+export const verifyToken = (token) => {
     try {
-        const data = jwt.verify(token, process.env.SECRET)
-        return data;
+        const data = jwt.verify(
+            token,
+            env.SECRET_KEY
+        );
+        return data
     } catch (error) {
-        error.statusCode = 403
-        throw error
+        error.statusCode = 403;
+        throw error;
     }
-}
-
-export { createToken, verifyToken }
+};

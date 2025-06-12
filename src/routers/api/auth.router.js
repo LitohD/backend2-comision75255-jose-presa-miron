@@ -1,97 +1,52 @@
-import { Router } from "express";
+import authCcontroller from "../../controllers/auth.controller.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
-import passport from "../../middlewares/passport.mid.js";
+import RouterHelper from "../../helpers/router.helper.js";
 
-const authRouter = Router();
-
-const registerCb = async (req, res, next) => {
-    try {
-        const { method, originalUrl: url } = req;
-        const { _id } = req.user;
-        return res
-            .status(201)
-            .json({ message: "Registered", response: _id, method, url });
-    } catch (error) {
-        next(error);
+class AuthRouter extends RouterHelper {
+    constructor() {
+        super();
+        this.init();
     }
-};
+    init = () => {
+        this.create(
+            "/register",
+            ["PUBLIC"],
+            passportCb("register"),
+            authCcontroller.registerCb
+        );
+        this.create(
+            "/login",
+            ["PUBLIC"],
+            passportCb("login"),
+            authCcontroller.loginCb
+        );
+        this.create("/signout", ["USER", "ADMIN"], authCcontroller.signoutCb);
+        this.create("/online", ["USER", "ADMIN"], authCcontroller.onlineCb);
+        this.read(
+            "/google",
+            ["PUBLIC"],
+            passportCb("google", { scope: ["email", "profile"] })
+        );
+        this.read(
+            "/google/redirect",
+            ["PUBLIC"],
+            passportCb("google"),
+            authCcontroller.loginCb
+        );
+        this.read("/bad-auth", ["PUBLIC"], authCcontroller.badAuthCb);
+        this.read("/forbidden", ["PUBLIC"], authCcontroller.forbiddenCb);
+        this.read(
+            "/verify/:email/:verifyCode",
+            ["PUBLIC"],
+            authCcontroller.verifyUserCb
+        );
+        this.create(
+            "/recover",
+            ["PUBLIC"],
+            authCcontroller.recoverCb
+        );
+    };
+}
 
-const loginCb = async (req, res, next) => {
-    try {
-        const { method, originalUrl: url } = req;
-        const { _id } = req.user;
-        return res
-            .status(200)
-            .cookie("token", req.user.token, { maxAge: 7 * 24 * 60 * 60 * 1000 })
-            .json({ message: "Logged in", response: _id, method, url });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const signoutCb = (req, res, next) => {
-    try {
-        const { method, originalUrl: url } = req;
-        return res.status(200).clearCookie("token").json({
-            message: "Sign out",
-            method,
-            url,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const onlineCb = (req, res, next) => {
-    try {
-        const { method, originalUrl: url } = req;
-        return res
-            .status(200)
-            .json({ message: "Is online", response: true, method, url });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const badAuth = (req, res, next) => {
-    try {
-        const error = new Error("Bad auth");
-        error.statusCode = 401;
-        throw error;
-    } catch (error) {
-        next(error);
-    }
-};
-
-const forbidden = (req, res, next) => {
-    try {
-        const error = new Error("Forbidden");
-        error.statusCode = 403;
-        throw error;
-    } catch (error) {
-        next(error);
-    }
-};
-
-authRouter.post("/register", passportCb("register"), registerCb);
-authRouter.post("/login", passportCb("login"), loginCb);
-authRouter.post("/signout", passportCb("user"), signoutCb);
-authRouter.post("/online", passportCb("user"), onlineCb);
-
-authRouter.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
-authRouter.get("/google/redirect", passportCb("google"), loginCb);
-
-authRouter.get("/bad-auth", badAuth);
-authRouter.get("/forbidden", forbidden);
-authRouter.get(
-    "/user",
-    passportCb("user"),
-    (req, res) => {
-        res.status(200).json({
-            status: "success",
-            payload: req.user
-        });
-    }
-);
-
+const authRouter = new AuthRouter().getRouter();
 export default authRouter;

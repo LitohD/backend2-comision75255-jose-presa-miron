@@ -12,6 +12,7 @@ document.querySelector("#login").addEventListener("click", async () => {
         const url = "/api/auth/login";
         let response = await fetch(url, opts);
         response = await response.json();
+        console.log(response);
         if (response.error) {
             alert(response.error);
         } else {

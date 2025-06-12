@@ -1,66 +1,13 @@
 import { Router } from "express";
+import cookiesController from "../../controllers/cookies.controller.js"
 
-const cookiesRouter = Router();
+const cookieRouter = Router ();
 
-const createCb = (req, res, next) => {
-    try {
-        const maxAge = 30 * 24 * 60 * 60 * 1000;
-        const message = "Cookie vence en 30 dias";
-        return res
-            .status(201)
-            .cookie("mode", "dark", { maxAge })
-            .cookie("role", "admin", { maxAge })
-            .json({ message });
-    } catch (error) {
-        next(error);
-    }
-};
-const createSignedCb = (req, res, next) => {
-    try {
-        const maxAge = 30 * 24 * 60 * 60 * 1000;
-        const message = "Cookie vence en 30 dias";
-        return res
-            .status(201)
-            .cookie("user", "igna", { maxAge, signed: true })
-            .cookie("id", "123456789", { maxAge, signed: true })
-            .json({ message });
-    } catch (error) {
-        next(error);
-    }
-};
-const readCb = (req, res, next) => {
-    try {
-        const cookies = req.cookies;
-        return res.status(200).json({ cookies });
-    } catch (error) {
-        next(error);
-    }
-};
-const readSignedCb = (req, res, next) => {
-    try {
-        const cookies = req.signedCookies;
-        return res.status(200).json({ cookies });
-    } catch (error) {
-        next(error);
-    }
-};
-const clearCb = (req, res, next) => {
-    try {
-        const message = "Cookies eliminadas";
-        return res
-            .status(200)
-            .clearCookie("user")
-            .clearCookie("role")
-            .json({ message });
-    } catch (error) {
-        next(error);
-    }
-};
+cookieRouter.get("/create", cookiesController.createCb)
+cookieRouter.get("/create-signed", cookiesController.createSignedCb);
+cookieRouter.get("/read", cookiesController.readCb);
+cookieRouter.get("/read-signed", cookiesController.readSignedCb);
+cookieRouter.get("/clear", cookiesController.clearCb);
+cookieRouter.get("/read-signed", cookiesController.readSignedCb);
 
-cookiesRouter.get("/create", createCb);
-cookiesRouter.get("/create-signed", createSignedCb);
-cookiesRouter.get("/read", readCb);
-cookiesRouter.get("/read-signed", readSignedCb);
-cookiesRouter.get("/clear", clearCb);
-
-export default cookiesRouter;
+export default cookieRouter

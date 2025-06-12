@@ -5,8 +5,8 @@ const schema = new Schema(
     {
         title: { type: String, required: true, index: true },
         description: { type: String },
-        category: { type: String, default: "", enum: [], index: true },
-        image: { type: String, default: ""},
+        category: { type: String, default: "Laptops", enum: ["Tablets", "Smartphones", "Laptops", "Smartwatches", "Headphones", "Speakers", "Desktops", "Streaming Devices", "Keyboards", "Accessories", "Virtual Reality", "Fitness", "Cameras", "Gaming", "Televisions", "Soundbars"], index: true },
+        image: { type: String, default: "" },
         price: { type: Number, default: 10 },
         stock: { type: Number, default: 10 },
         onsale: { type: Boolean, default: false },
@@ -20,5 +20,4 @@ schema.pre(/^find/, function () {
 });
 
 const Product = model(collection, schema);
-
 export default Product;

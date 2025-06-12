@@ -1,69 +1,33 @@
-import { Router } from "express";
-import { productsManager } from "../data/managers/mongo/manager.mongo.js";
+import viewsController from "../controllers/views.controller.js";
 import passport from "../middlewares/passport.mid.js";
+import RouterHelper from "../helpers/router.helper.js";
 
-const viewsRouter = Router();
+class ViewsRouter extends RouterHelper {
+    constructor() {
+        super();
+        this.init();
+    }
+    init = () => {
+        this.render("/", ["PUBLIC"], viewsController.indexView);
+        this.render("/register", ["PUBLIC"], viewsController.registerView);
+        this.render("/login", ["PUBLIC"], viewsController.loginView);
+        this.render("/details/:pid", ["PUBLIC"], viewsController.detailView);
+        this.render(
+            "/profile",
+            ["USER", "ADMIN"],
+            passport.authenticate("user", { session: false }),
+            viewsController.profileView
+        );
+        this.render(
+            "/update-user",
+            ["USER", "ADMIN"],
+            viewsController.updateUSerView
+        );
+        this.render("/verify/:email", ["PUBLIC"], viewsController.verifyView);
+        this.render("/reset/:email", ["PUBLIC"], viewsController.resetView);
+        this.render("/recover", ["PUBLIC"], viewsController.forgotPasswordView);
+    };
+}
 
-const indexView = async (req, res) => {
-    try {
-        const products = await productsManager.readAll();
-        res.status(200).render("index", { products });
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const registerView = async (req, res) => {
-    try {
-        res.status(200).render("register");
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const loginView = async (req, res) => {
-    try {
-        res.status(200).render("login");
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const detailsView = async (req, res) => {
-    try {
-        const { pid } = req.params;
-        const product = await productsManager.readById(pid);
-        res.status(200).render("details", { product });
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const profileView = async (req, res) => {
-    try {
-        const { user } = req;
-        res.status(200).render("profile", { user });
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const updateView = async (req, res) => {
-    try {
-        res.status(200).render("update-user");
-    } catch (error) {
-        res.status(error.statusCode || 500).render("error", { error });
-    }
-};
-const cartView = (req, res) => {
-    res.status(200).render("cart");
-};
-
-viewsRouter.get("/", indexView);
-viewsRouter.get("/register", registerView);
-viewsRouter.get("/login", loginView);
-viewsRouter.get("/details/:pid", detailsView);
-viewsRouter.get(
-    "/profile",
-    passport.authenticate("user", { session: false }),
-    profileView
-);
-viewsRouter.get("/update-user", updateView);
-viewsRouter.get("/cart", cartView);
-
+const viewsRouter = new ViewsRouter().getRouter();
 export default viewsRouter;

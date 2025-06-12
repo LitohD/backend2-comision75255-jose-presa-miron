@@ -1,18 +1,25 @@
-import { Router } from "express";
 import productsRouter from "./api/products.router.js";
 import cartsRouter from "./api/carts.router.js";
 import usersRouter from "./api/users.router.js";
-import cookiesRouter from "./api/cookies.router.js";
-import sessionsRouter from "./api/sessions.router.js";
+import cookieRouter from "./api/cookies.router.js"
+import sessionRouter from "./api/sessions.router.js"
 import authRouter from "./api/auth.router.js";
+import RouterHelper from "../helpers/router.helper.js";
 
-const apiRouter = Router();
+class ApiRouter extends RouterHelper {
+    constructor() {
+        super();
+        this.init();
+    };
+    init = () => {
+        this.use("/products", ["PUBLIC"], productsRouter);
+        this.use("/carts", ["PUBLIC"], cartsRouter);
+        this.use("/users", ["PUBLIC"], usersRouter);
+        this.use("/cookies", ["PUBLIC"], cookieRouter);
+        this.use("/session", ["PUBLIC"], sessionRouter);
+        this.use("/auth", ["PUBLIC"], authRouter);
+    }
+};
 
-apiRouter.use("/products", productsRouter);
-apiRouter.use("/carts", cartsRouter);
-apiRouter.use("/users", usersRouter);
-apiRouter.use("/cookies", cookiesRouter);
-apiRouter.use("/sessions", sessionsRouter);
-apiRouter.use("/auth", authRouter);
-
+const apiRouter = new ApiRouter().getRouter();
 export default apiRouter;

@@ -1,25 +1,16 @@
-import { Router } from "express";
-import passport from "../../middlewares/passport.mid.js";
-import { usersManager } from "../../data/managers/mongo/manager.mongo.js";
+import usersController from "../../controllers/users.controller.js";
+import RouterHelper from "../../helpers/router.helper.js";
 
-const usersRouter = Router();
-
-const updateUser = async (req, res, next) => {
-    try {
-        const { method, originalUrl: url } = req;
-        const data = req.body;
-        const { _id } = req.user;
-        const response = await usersManager.updateById(_id, data);
-        res.status(200).json({ response, method, url });
-    } catch (error) {
-        next(error);
+class UserRouter extends RouterHelper {
+    constructor() {
+        super();
+        this.init();
+    };
+    init = () => {
+        this.update("/", ["USER", "ADMIN"], usersController.updateUserCb);
+        this.read("/:email", ["USER", "ADMIN"], usersController.sendEmailCb)
     }
 };
 
-usersRouter.put(
-    "/",
-    passport.authenticate("user", { session: false }),
-    updateUser
-);
-
+const usersRouter = new UserRouter().getRouter();
 export default usersRouter;

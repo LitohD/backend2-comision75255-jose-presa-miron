@@ -1,10 +1,13 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
-import { usersManager } from "../data/managers/mongo/manager.mongo.js";
-import { createHash, compareHash } from "../helpers/hash.helper.js";
+import { usersService } from "../services/service.js";
+import { compareHash } from "../helpers/hash.helper.js";
 import { createToken } from "../helpers/token.helper.js";
+import env from "../helpers/env.helper.js";
+import { Strategy as GoogleStrategy } from "passport-google-oauth2";
+import verifyEmail from "../helpers/verifyEmail.helper.js";
+import emailService from "../services/emailService.js";
 
 const callbackURL = "http://localhost:8080/api/auth/google/redirect";
 
@@ -17,15 +20,18 @@ passport.use(
         },
         async (req, email, password, done) => {
             try {
-                if (!req.body.city) {
-                    return done(null, null, { message: "Invalid data", statusCode: 400 });
+                const { city } = req.body;
+                if (!city) {
+                    const error = new Error("Invalid data");
+                    error.statusCode = 400;
+                    throw error;
                 }
-                let user = await usersManager.readBy({ email });
+                let user = await usersService.readBy({ email });
                 if (user) {
-                    return done(null, null, { message: "Invalid credentials", statusCode: 401 });
+                    done(null, null, { message: "Invalid Credential", statusCode: 401 });
                 }
-                req.body.password = createHash(password);
-                user = await usersManager.createOne(req.body);
+                user = await usersService.createOne(req.body);
+                await emailService.sendVerificationEmail(user.email, user.verifyCode)
                 done(null, user);
             } catch (error) {
                 done(error);
@@ -33,26 +39,40 @@ passport.use(
         }
     )
 );
+
 passport.use(
     "login",
     new LocalStrategy(
-        { passReqToCallback: true, usernameField: "email" },
+        {
+            passReqToCallback: true,
+            usernameField: "email",
+        },
         async (req, email, password, done) => {
             try {
-                let user = await usersManager.readBy({ email });
+                let user = await usersService.readBy({ email });
                 if (!user) {
-                    return done(null, null, { message: "Invalid credentials", statusCode: 401 });
+                    const error = new Error("Invalid credential");
+                    error.statusCode = 401;
+                    throw error;
                 }
                 const verifyPass = compareHash(password, user.password);
                 if (!verifyPass) {
-                    return done(null, null, { message: "Invalid credentials", statusCode: 401 });
+                    done(null, null, { message: "Invalid Credential", statusCode: 401 });
                 }
+                const { isVerified } = user;
+                if (!isVerified) {
+                    return done(null, null, {
+                        message: "Please verify your account"
+                    })
+                }
+
                 const data = {
                     user_id: user._id,
                     email: user.email,
                     role: user.role,
                 };
                 const token = createToken(data);
+                console.log(token);
                 user.token = token;
                 done(null, user);
             } catch (error) {
@@ -61,70 +81,70 @@ passport.use(
         }
     )
 );
+
 passport.use(
     "user",
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-            secretOrKey: process.env.SECRET,
+            secretOrKey: env.SECRET_KEY,
         },
         async (data, done) => {
             try {
-                const { user_id, email, role } = data;
-                const user = await usersManager.readBy({ _id: user_id, email, role });
+                const { user_id, email, role, city } = data;
+                const user = await usersService.readById({ _id: user_id, email, role });
                 if (!user) {
-                    return done(null, null, { message: "Forbidden", statusCode: 403 });
+                    done(null, null, { message: "Forbiden", statusCode: 403 });
                 }
-                return done(null, user);
+                done(null, user);
             } catch (error) {
                 done(error);
             }
         }
     )
 );
+
 passport.use(
     "admin",
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-            secretOrKey: process.env.SECRET,
+            secretOrKey: env.SECRET_KEY,
         },
         async (data, done) => {
             try {
+                console.log("data");
+                console.log(data);
                 const { user_id, email, role } = data;
-                const user = await usersManager.readBy({ _id: user_id, email, role });
+                const user = await usersService.readById({ _id: user_id, email, role });
                 if (!user || user.role !== "ADMIN") {
-                    return done(null, null, { message: "Forbidden", statusCode: 403 });
+                    done(null, null, { message: "Forbiden", statusCode: 403 });
                 }
-                return done(null, user);
+                done(null, user);
             } catch (error) {
                 done(error);
             }
         }
     )
 );
+
 passport.use(
     "google",
     new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_SECRET,
-            callbackURL,
-        },
+        { clientID: env.GOOGLE_ID, clientSecret: env.GOOGLE_SECRET, callbackURL },
         async (accessToken, refreshToken, profile, done) => {
             try {
                 console.log(profile);
                 const { email, name, picture, id } = profile;
-                let user = await usersManager.readBy({ email: id });
+                let user = await usersService.readBy({ email: id });
                 if (!user) {
                     user = {
                         email: id,
                         name: name.givenName,
-                        avatar: picture,
-                        password: createHash(email),
+                        password: email,
                         city: "Google",
                     };
-                    user = await usersManager.createOne(user);
+                    user = await usersService.createOne(user);
                 }
                 const data = {
                     user_id: user._id,
@@ -132,8 +152,9 @@ passport.use(
                     role: user.role,
                 };
                 const token = createToken(data);
+                console.log(token);
                 user.token = token;
-                done(null, user);
+                done(null, done);
             } catch (error) {
                 done(error);
             }

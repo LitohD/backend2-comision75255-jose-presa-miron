@@ -1,22 +1,22 @@
-document.querySelector("#register").addEventListener("click", async () => {
+document.querySelector("#update-user").addEventListener("click", async () => {
     try {
         const data = {};
-        const name = document.querySelector("#name").value
+        const name = document.querySelector("#name").value;
         if (name) {
-            data.name = name
-        }
-        const date = document.querySelector("#date").value
-        if (date) {
-            data.date = date
-        }
-        const avatar = document.querySelector("#avatar").value
+            data.name = name;
+        };
+        const avatar = document.querySelector("#avatar").value;
         if (avatar) {
-            data.avatar = avatar
-        }
-        const city = document.querySelector("#city").value
+            data.avatar = avatar;
+        };
+        const city = document.querySelector("#city").value;
         if (city) {
             data.city = city
-        }
+        };
+        const date = document.querySelector("#date").value;
+        if (date) {
+            data.date = date;
+        };
         const opts = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ document.querySelector("#register").addEventListener("click", async () => {
         if (response.error) {
             alert(response.error);
         } else {
-            location.replace("/login");
+            location.replace("/profile");
         }
     } catch (error) {
         console.log(error);
