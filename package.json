@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node ./index.js",
-    "dev": "node --watch ./index.js"
+    "start": "node ./index.js --mode prod",
+    "dev": "node --watch ./index.js --mode dev",
+    "test": "node ./index.js --mode test"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.6",
+    "commander": "^14.0.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
@@ -31,6 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^7.0.3",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-jwt": "^4.0.1",

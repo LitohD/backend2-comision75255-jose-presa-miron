@@ -87,16 +87,20 @@ passport.use(
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-            secretOrKey: env.SECRET_KEY,
+            secretOrKey: process.env.SECRET,
         },
         async (data, done) => {
             try {
-                const { user_id, email, role, city } = data;
-                const user = await usersService.readById({ _id: user_id, email, role });
+                const { user_id, email, role } = data;
+                const user = await usersRepository.readBy({
+                    _id: user_id,
+                    email,
+                    role,
+                });
                 if (!user) {
-                    done(null, null, { message: "Forbiden", statusCode: 403 });
+                    return done(null, null, { message: "Forbidden", statusCode: 403 });
                 }
-                done(null, user);
+                return done(null, user);
             } catch (error) {
                 done(error);
             }
@@ -109,18 +113,20 @@ passport.use(
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-            secretOrKey: env.SECRET_KEY,
+            secretOrKey: process.env.SECRET,
         },
         async (data, done) => {
             try {
-                console.log("data");
-                console.log(data);
                 const { user_id, email, role } = data;
-                const user = await usersService.readById({ _id: user_id, email, role });
+                const user = await usersRepository.readBy({
+                    _id: user_id,
+                    email,
+                    role,
+                });
                 if (!user || user.role !== "ADMIN") {
-                    done(null, null, { message: "Forbiden", statusCode: 403 });
+                    return done(null, null, { message: "Forbidden", statusCode: 403 });
                 }
-                done(null, user);
+                return done(null, user);
             } catch (error) {
                 done(error);
             }

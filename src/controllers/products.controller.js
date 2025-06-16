@@ -1,13 +1,13 @@
 import { productsService } from "../services/service.js";
 
 class ProductsController {
-    createOne = async (req, res, next) => {
+    createOne = async (req, res) => {
         const data = req.body;
         data.owner_id = req.user._id;
         const response = await productsService.createOne(data);
         res.json200(response);
     };
-    readAll = async (req, res, next) => {
+    readAll = async (req, res) => {
         const filter = req.query;
         const response = await productsService.readAll(filter);
         if (response.length === 0) {
@@ -15,7 +15,7 @@ class ProductsController {
         }
         res.json200(response);
     };
-    readById = async (req, res, next) => {
+    readById = async (req, res) => {
         const { id } = req.params;
         const response = await productsService.readById(id);
         if (!response) {
@@ -23,7 +23,7 @@ class ProductsController {
         }
         res.json200(response);
     };
-    updateById = async (req, res, next) => {
+    updateById = async (req, res) => {
         const { id } = req.params;
         const data = req.body;
         const response = await productsService.updateById(id, data);
@@ -32,7 +32,7 @@ class ProductsController {
         }
         res.json200(response);
     };
-    destroyById = async (req, res, next) => {
+    destroyById = async (req, res) => {
         const { id } = req.params;
         const response = await productsService.destroyById(id);
         if (!response) {

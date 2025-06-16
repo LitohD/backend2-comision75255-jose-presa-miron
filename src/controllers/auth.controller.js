@@ -1,6 +1,7 @@
-import verifyEmail from "../helpers/verifyEmail.helper.js";
 import emailService from "../services/emailService.js";
 import { usersService } from "../services/service.js";
+import { createHash } from "../helpers/hash.helper.js";
+
 
 class AuthController {
     registerCb = async (req, res, next) => {
@@ -17,7 +18,12 @@ class AuthController {
         res.clearCookie("token").json200(_id, "Signout Ok");
     };
     onlineCb = async (req, res, next) => {
-        res.json200(null, "Is Online");
+        const payload = {
+            name: req.user.name,
+            email: req.user.email
+        }
+        console.log(payload);
+        res.json200(payload, "Is Online");
     };
     badAuthCb = async (req, res, next) => {
         res.json401();
@@ -40,6 +46,8 @@ class AuthController {
     recoverCb = async (req, res, next) => {
 
         const { email } = req.body;
+        console.log("body recovery");
+        console.log(req.body);
         if (!email) {
             return res.json203("need email");
         }
@@ -48,6 +56,18 @@ class AuthController {
             return res.json404("There is no account with that email");
         }
         await emailService.sendRecoveryEmail(user.email);
+        res.json200();
+    };
+    resetCb = async (req, res, next) => {
+        const { email, password } = req.body;
+
+        const user = await usersService.readBy({ email });
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+        const hashedPassword = createHash(password);
+        await usersService.updateById(user._id, { password: hashedPassword })
+
         res.json200();
     };
 }

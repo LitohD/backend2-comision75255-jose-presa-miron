@@ -1,22 +1,23 @@
+import "./src/helpers/env.helper.js"
 import express from "express";
 import __dirname from "./utils.js";
-import env from "./helpers/env.helper.js";
+import env from "./src/helpers/env.helper.js";
 import path from "path";
 import morgan from "morgan";
 import { engine } from "express-handlebars";
-import pathHandler from "./middlewares/pathHandler.mid.js";
-import errorHandler from "./middlewares/errorHandler.mid.js";
-import indexRouter from "./routes/index.routes.js";
+import pathHandler from "./src/middlewares/pathHandler.mid.js";
+import errorHandler from "./src/middlewares/errorHandler.mid.js";
+import indexRouter from "./src/routers/index.router.js";
 import cookieParser from "cookie-parser";
-import argvsHelper from "./helpers/argvs.helper.js";
-import dbConnect from "./helpers/dbConnect.helper.js";
+import argvsHelper from "./src/helpers/argvs.helper.js";
+import dbConnect from "./src/helpers/dbConnect.helper.js";
 
 const server = express();
 const PORT = env.PORT;
 const ready = async () => {
     console.log(`Listennig to port ${PORT} and mode: ${argvsHelper.mode}`);
     if (env.PERSISTENCE === "mongo") {
-        await dbConnect(env.MONGO_URL);
+        await dbConnect(env.LINK_DB);
     }
 };
 server.listen(PORT, ready);

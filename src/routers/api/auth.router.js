@@ -1,4 +1,4 @@
-import authCcontroller from "../../controllers/auth.controller.js";
+import authController from "../../controllers/auth.controller.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
 import RouterHelper from "../../helpers/router.helper.js";
 
@@ -8,43 +8,17 @@ class AuthRouter extends RouterHelper {
         this.init();
     }
     init = () => {
-        this.create(
-            "/register",
-            ["PUBLIC"],
-            passportCb("register"),
-            authCcontroller.registerCb
-        );
-        this.create(
-            "/login",
-            ["PUBLIC"],
-            passportCb("login"),
-            authCcontroller.loginCb
-        );
-        this.create("/signout", ["USER", "ADMIN"], authCcontroller.signoutCb);
-        this.create("/online", ["USER", "ADMIN"], authCcontroller.onlineCb);
-        this.read(
-            "/google",
-            ["PUBLIC"],
-            passportCb("google", { scope: ["email", "profile"] })
-        );
-        this.read(
-            "/google/redirect",
-            ["PUBLIC"],
-            passportCb("google"),
-            authCcontroller.loginCb
-        );
-        this.read("/bad-auth", ["PUBLIC"], authCcontroller.badAuthCb);
-        this.read("/forbidden", ["PUBLIC"], authCcontroller.forbiddenCb);
-        this.read(
-            "/verify/:email/:verifyCode",
-            ["PUBLIC"],
-            authCcontroller.verifyUserCb
-        );
-        this.create(
-            "/recover",
-            ["PUBLIC"],
-            authCcontroller.recoverCb
-        );
+        this.create( "/register", ["PUBLIC"], passportCb("register"), authController.registerCb);
+        this.create( "/login", ["PUBLIC"], passportCb("login"), authController.loginCb);
+        this.create("/signout", ["USER", "ADMIN"], authController.signoutCb);
+        this.create("/online", ["USER", "ADMIN"], authController.onlineCb);
+        this.read( "/google", ["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }));
+        this.read("/google/redirect", ["PUBLIC"], passportCb("google"), authController.loginCb);
+        this.read("/bad-auth", ["PUBLIC"], authController.badAuthCb);
+        this.read("/forbidden", ["PUBLIC"], authController.forbiddenCb);
+        this.read("/verify/:email/:verifyCode", ["PUBLIC"], authController.verifyUserCb);
+        this.create("/recover", ["PUBLIC"], authController.recoverCb);
+        this.create("/reset", ["PUBLIC"], authController.resetCb);
     };
 }
 

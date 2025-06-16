@@ -3,7 +3,7 @@ import env from "../helpers/env.helper.js"
 
 const mongoUrl = env.MONGO_URL;
 
-mongoose.connect(mongoIrl)
+mongoose.connect(mongoUrl)
     .then((result) => {
         console.log("Connected to DB");
     }).catch((err) => {

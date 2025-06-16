@@ -1,11 +1,11 @@
-import env from "../helpers/env.helper.js"
-
-const PERSISTENCE = env.PERSISTENCE;
+const { PERSISTENCE } = process.env;
 
 let dao = {};
+
 switch (PERSISTENCE) {
     case "memory":
         {
+            console.log("memory connected");
             const { productsManager, cartsManager, usersManager } = await import(
                 "./memory/dao.memory.js"
             );
@@ -14,6 +14,7 @@ switch (PERSISTENCE) {
         break;
     case "fs":
         {
+            console.log("fs connected");
             const { productsManager, cartsManager, usersManager } = await import(
                 "./fs/dao.fs.js"
             );
@@ -22,6 +23,7 @@ switch (PERSISTENCE) {
         break;
     default:
         {
+            console.log("mongo database connected");
             const { productsManager, cartsManager, usersManager } = await import(
                 "./mongo/dao.mongo.js"
             );
