@@ -37,7 +37,7 @@ server.engine(
     })
 );
 server.set("view engine", "handlebars");
-server.set("views", path.join(__dirname, "views"));
+server.set("views", path.join(__dirname, "src", "views"));
 server.use("/", indexRouter);
 server.use(errorHandler);
-server.use(pathHandler);
+server.use(pathHandler); 

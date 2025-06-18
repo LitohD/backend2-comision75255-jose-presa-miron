@@ -1,8 +1,12 @@
 import { config } from "dotenv";
 import argvsHelper from "./argvs.helper.js";
 
+
+
 const mode = argvsHelper.mode;
 const path = ".env." + mode;
+
+console.log("modo actual:", argvsHelper.mode)
 
 config({ path });
 
@@ -12,6 +16,9 @@ const env = {
     SECRET: process.env.SECRET,
     GOOGLE_ID: process.env.GOOGLE_ID,
     GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+    GOOGLE_EMAIL: process.env.GOOGLE_EMAIL,
+    GOOGLE_PASSWORD: process.env.GOOGLE_PASSWORD,
+    PERSISTENCE: process.env.PERSISTENCE,
 };
 
 export default env;

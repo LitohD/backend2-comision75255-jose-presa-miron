@@ -8,7 +8,7 @@ const transport = createTransport({
     secure: true,
     auth: {
         user: env.GOOGLE_EMAIL,
-        pass: env.GOOGLE_APP_PASSWORD,
+        pass: env.GOOGLE_PASSWORD,
     },
 });
 
