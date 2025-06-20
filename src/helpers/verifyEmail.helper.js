@@ -1,5 +1,5 @@
 import { createTransport } from "nodemailer";
-import __dirname from "../../utils.js";
+import __dirname from "../utils.js";
 import env from "../helpers/env.helper.js";
 
 const transport = createTransport({

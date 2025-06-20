@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node ./index.js --mode prod",
-    "dev": "node --watch ./index.js --mode dev",
-    "test": "node ./index.js --mode test"
+    "start": "node ./src/index.js --mode prod",
+    "dev": "node --watch ./src/index.js --mode dev",
+    "test": "node ./src/index.js --mode test"
   },
   "repository": {
     "type": "git",

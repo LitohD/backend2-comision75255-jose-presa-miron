@@ -8,6 +8,7 @@ class AuthRouter extends RouterHelper {
         this.init();
     }
     init = () => {
+        this.render("/register", ["PUBLIC"], (req, res) => {res.render("register");});
         this.create( "/register", ["PUBLIC"], passportCb("register"), authController.registerCb);
         this.create( "/login", ["PUBLIC"], passportCb("login"), authController.loginCb);
         this.create("/signout", ["USER", "ADMIN"], authController.signoutCb);

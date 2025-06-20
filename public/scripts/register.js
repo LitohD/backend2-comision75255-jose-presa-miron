@@ -1,13 +1,22 @@
 document.querySelector("#register").addEventListener("click", async () => {
     try {
         const data = {
-            name: document.querySelector("#name").value,
-            date: document.querySelector("#date").value,
+            first_name: document.querySelector("#first_name").value,
+            last_name: document.querySelector("#last_name").value,
+            age: parseInt(document.querySelector("#age").value),
             email: document.querySelector("#email").value,
             password: document.querySelector("#password").value,
             avatar: document.querySelector("#avatar").value,
             city: document.querySelector("#city").value,
         };
+        // const data = {
+        //     name: document.querySelector("#name").value,
+        //     date: document.querySelector("#date").value,
+        //     email: document.querySelector("#email").value,
+        //     password: document.querySelector("#password").value,
+        //     avatar: document.querySelector("#avatar").value,
+        //     city: document.querySelector("#city").value,
+        // };
         const opts = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
