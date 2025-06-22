@@ -4,20 +4,20 @@ import { createHash } from "../helpers/hash.helper.js";
 
 
 class AuthController {
-    registerCb = async (req, res, next) => {
+    registerCb = async (req, res) => {
         const { _id } = req.user;
         res.json201(_id, "Registered");
     };
-    loginCb = async (req, res, next) => {
+    loginCb = async (req, res) => {
         const opts = { maxAge: 7 * 24 * 60 * 60 * 1000 };
         const { _id } = req.user;
         res.cookie("token", req.user.token, opts).json200(_id, "Logged in");
     };
-    signoutCb = async (req, res, next) => {
+    signoutCb = async (req, res) => {
         const { _id } = req;
         res.clearCookie("token").json200(_id, "Signout Ok");
     };
-    onlineCb = async (req, res, next) => {
+    onlineCb = async (req, res) => {
     const payload = {
         name: req.user.name,
         email: req.user.email,
@@ -26,16 +26,16 @@ class AuthController {
     console.log(payload);
     res.json200({ response: payload }, "Is Online");
 };
-    badAuthCb = async (req, res, next) => {
+    badAuthCb = async (req, res) => {
         res.json401();
     };
-    forbiddenCb = async (req, res, next) => {
+    forbiddenCb = async (req, res) => {
         res.json403();
     };
-    googleCb = async (req, res, next) => {
+    googleCb = async (req, res) => {
         res.json403();
     };
-    verifyUserCb = async (req, res, next) => {
+    verifyUserCb = async (req, res) => {
         const { email, verifyCode } = req.params;
         const user = await usersService.readBy({ email, verifyCode });
         if (!user) {
@@ -44,7 +44,7 @@ class AuthController {
         await usersService.updateById(user._id, { isVerified: true });
         res.json200(user, "verified!");
     };
-    recoverCb = async (req, res, next) => {
+    recoverCb = async (req, res) => {
 
         const { email } = req.body;
         console.log("body recovery");
@@ -59,7 +59,7 @@ class AuthController {
         await emailService.sendRecoveryEmail(user.email);
         res.json200();
     };
-    resetCb = async (req, res, next) => {
+    resetCb = async (req, res) => {
         const { email, password } = req.body;
 
         const user = await usersService.readBy({ email });

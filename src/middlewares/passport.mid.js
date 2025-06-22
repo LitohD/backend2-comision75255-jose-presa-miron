@@ -8,6 +8,7 @@ import env from "../helpers/env.helper.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import verifyEmail from "../helpers/verifyEmail.helper.js";
 import emailService from "../services/emailService.js";
+import { usersRepository } from "../repositories/repository.js";
 
 const callbackURL = "http://localhost:8080/api/auth/google/redirect";
 
@@ -30,7 +31,7 @@ passport.use(
                 if (user) {
                     done(null, null, { message: "Invalid Credential", statusCode: 401 });
                 }
-                user = await usersService.createOne(req.body);
+                user = await usersRepository.createOne(req.body);
                 await emailService.sendVerificationEmail(user.email, user.verifyCode)
                 done(null, user);
             } catch (error) {

@@ -12,17 +12,8 @@ class ViewsRouter extends RouterHelper {
         this.render("/register", ["PUBLIC"], viewsController.registerView);
         this.render("/login", ["PUBLIC"], viewsController.loginView);
         this.render("/details/:pid", ["PUBLIC"], viewsController.detailView);
-        this.render(
-            "/profile",
-            ["USER", "ADMIN"],
-            passport.authenticate("user", { session: false }),
-            viewsController.profileView
-        );
-        this.render(
-            "/update-user",
-            ["USER", "ADMIN"],
-            viewsController.updateUSerView
-        );
+        this.render("/profile", ["USER", "ADMIN"], passport.authenticate("user", { session: false }), viewsController.profileView);
+        this.render("/update-user", ["USER", "ADMIN"], viewsController.updateUSerView);
         this.render("/verify/:email", ["PUBLIC"], viewsController.verifyView);
         this.render("/reset/:email", ["PUBLIC"], viewsController.resetView);
         this.render("/recover", ["PUBLIC"], viewsController.forgotPasswordView);
