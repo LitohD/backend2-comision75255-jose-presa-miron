@@ -18,13 +18,14 @@ class AuthController {
         res.clearCookie("token").json200(_id, "Signout Ok");
     };
     onlineCb = async (req, res, next) => {
-        const payload = {
-            name: req.user.name,
-            email: req.user.email
-        }
-        console.log(payload);
-        res.json200(payload, "Is Online");
+    const payload = {
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
     };
+    console.log(payload);
+    res.json200({ response: payload }, "Is Online");
+};
     badAuthCb = async (req, res, next) => {
         res.json401();
     };

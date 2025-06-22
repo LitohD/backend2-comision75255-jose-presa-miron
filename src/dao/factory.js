@@ -23,7 +23,6 @@ switch (PERSISTENCE) {
         break;
     default:
         {
-            console.log("mongo database connected");
             const { productsManager, cartsManager, usersManager } = await import(
                 "./mongo/dao.mongo.js"
             );

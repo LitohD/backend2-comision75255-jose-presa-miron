@@ -1,4 +1,4 @@
-import transport from "../helpers/emailTransport.js";
+import { transport } from "../helpers/email.helper.js";
 import env from "../helpers/env.helper.js";
 
 class EmailService {
