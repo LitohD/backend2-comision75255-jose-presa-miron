@@ -11,6 +11,7 @@ import indexRouter from "./routers/index.router.js";
 import cookieParser from "cookie-parser";
 import argvsHelper from "./helpers/argvs.helper.js";
 import dbConnect from "./helpers/dbConnect.helper.js";
+import cors from "cors"
 
 const server = express();
 const PORT = env.PORT;
