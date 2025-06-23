@@ -34,7 +34,7 @@ const showOption = async () => {
                         alert(`Error al eliminar el producto`);
                     } else {
                         alert(
-                            `Producto eliminado: ${deleteResponseJson.response.title}`
+                            `Producto eliminado: ${deleteResponse.response.title}`
                         );
                         window.location.href = "/";
                     }

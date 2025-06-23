@@ -16,7 +16,7 @@ import cors from "cors"
 const server = express();
 const PORT = env.PORT;
 const ready = async () => {
-    console.log(`Listennig to port ${PORT} and mode: ${argvsHelper.mode}`);
+    console.log(`Listenig to port ${PORT} and mode: ${argvsHelper.mode}`);
     if (env.PERSISTENCE === "mongo") {
         await dbConnect(env.LINK_DB);
     }
@@ -28,6 +28,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, "../public")));
 server.use(morgan("dev"));
+server.use(cors({ origin: true, credentials: true }))
 
 server.engine(
     "handlebars",
