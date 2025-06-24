@@ -15,18 +15,18 @@ const isOnline = async () => {
         console.log(response);
         if (response.error) {
             selector.innerHTML = `
-            <a class="btn btn-success py-1 px-2 m-1" href="/user/register">
+            <a class="btn btn-primary py-1 px-2 m-1" href="/register">
             <i class="bi bi-person-add"></i> Register
             </a>
-            <a class="btn btn-success py-1 px-2 m-1" href="/user/login">
+            <a class="btn btn-primary py-1 px-2 m-1" href="/login">
             <i class="bi bi-door-open"></i> Login
             </a>`;
         } else {
             selector.innerHTML = `
-            <a class="btn btn-success py-1 px-2 m-1" href="/user/profile">
+            <a class="btn btn-primary py-1 px-2 m-1" href="/profile">
             <i class="bi bi-person-circle"></i> Profile
             </a>
-            <a class="btn btn-success py-1 px-2 m-1 d-flex align-items-center gap-1" href="/cart/cart">
+            <a class="btn btn-primary py-1 px-2 m-1 d-flex align-items-center gap-1" href="/cart">
             <i class="bi bi-cart-fill"></i> Cart
             </a>
             <button class="btn btn-danger py-1 px-2 m-1" id="signout"> 

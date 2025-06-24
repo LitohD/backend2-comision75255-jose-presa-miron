@@ -45,7 +45,7 @@ class ViewsController {
     };
     cartView = async (req, res) => {
         const user = req.user;
-        res.status(200).render("cart/cart", { user });
+        res.status(200).render("cart", { user });
     }
 }
 

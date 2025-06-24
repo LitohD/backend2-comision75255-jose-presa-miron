@@ -10,7 +10,7 @@ class ProductsDTO {
         }
         this.title = data.title;
         this.description = data.description;
-        this.categoy = data.categoy;
+        this.category = data.category;
         this.image = data.image || "";
         this.price = data.price || 10;
         this.stock = data.stock || 10;

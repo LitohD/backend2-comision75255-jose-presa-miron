@@ -8,6 +8,5 @@ cookieRouter.get("/create-signed", cookiesController.createSignedCb);
 cookieRouter.get("/read", cookiesController.readCb);
 cookieRouter.get("/read-signed", cookiesController.readSignedCb);
 cookieRouter.get("/clear", cookiesController.clearCb);
-cookieRouter.get("/read-signed", cookiesController.readSignedCb);
 
 export default cookieRouter

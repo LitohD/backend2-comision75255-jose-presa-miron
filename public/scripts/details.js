@@ -16,7 +16,7 @@ const showOption = async () => {
                                 Eliminar producto de la DB
                             </button>
                             <a class="btn btn-info" id="updateBtn" >
-                                Actulizar producto
+                                Actualizar producto
                             </a>
                             `;document
                 .querySelector("#deleteBtn")
@@ -50,3 +50,29 @@ const showOption = async () => {
 };
 
 showOption();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const addToCartBtn = document.querySelector("#addToCart");
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener("click", async () => {
+            const productId = addToCartBtn.getAttribute("data-product-id");
+            try {
+                const opts = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ product_id: productId }),
+                };
+                const url = "/api/carts"; // Ajusta la ruta si es necesario
+                let response = await fetch(url, opts);
+                response = await response.json();
+                if (response.error) {
+                    alert("Error al agregar al carrito: " + response.error);
+                } else {
+                    alert("Producto agregado al carrito");
+                }
+            } catch (error) {
+                alert("Error al agregar al carrito: " + (error.message || error));
+            }
+        });
+    }
+});
