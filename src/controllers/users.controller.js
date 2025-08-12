@@ -24,6 +24,15 @@ class UsersController {
             next(error);
         }
     };
+
+    getAllUsers = async (req, res, next) => {
+        try {
+            const users = await usersRepository.readAll();
+            res.status(200).json(users);
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 const usersController = new UsersController();

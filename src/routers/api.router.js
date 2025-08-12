@@ -5,6 +5,8 @@ import cookieRouter from "./api/cookies.router.js"
 import sessionRouter from "./api/sessions.router.js"
 import authRouter from "./api/auth.router.js";
 import RouterHelper from "../helpers/router.helper.js";
+import mocksRouter from './api/mocks.router.js';
+import petsRouter from "./api/pets.router.js";
 
 class ApiRouter extends RouterHelper {
     constructor() {
@@ -18,6 +20,8 @@ class ApiRouter extends RouterHelper {
         this.use("/cookies", ["PUBLIC"], cookieRouter);
         this.use("/session", ["PUBLIC"], sessionRouter);
         this.use("/auth", ["PUBLIC"], authRouter);
+        this.use('/mocks', ['PUBLIC'], mocksRouter);
+        this.use("/pets", ["PUBLIC"], petsRouter);        
     }
 };
 

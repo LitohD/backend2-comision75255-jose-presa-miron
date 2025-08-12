@@ -7,7 +7,7 @@ class UserRouter extends RouterHelper {
         this.init();
     };
     init = () => {
-        this.update("/", ["USER", "ADMIN"], usersController.updateUserCb);
+        this.read("/", ["USER", "ADMIN"], usersController.getAllUsers);
         this.read("/:email", ["USER", "ADMIN"], usersController.sendEmailCb)
     }
 };

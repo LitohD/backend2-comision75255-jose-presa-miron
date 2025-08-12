@@ -1,6 +1,7 @@
 import Product from "./models/products.model.js"
 import Cart from "./models/carts.model.js"
 import User from "./models/users.model.js"
+import Pet from "./models/pets.model.js"
 
 class DaoMongo {
     constructor(model) {
@@ -17,5 +18,6 @@ class DaoMongo {
 const productsManager = new DaoMongo(Product);
 const cartsManager = new DaoMongo(Cart);
 const usersManager = new DaoMongo(User);
+const petsManager = new DaoMongo(Pet);
 
-export { productsManager, cartsManager, usersManager };
+export { productsManager, cartsManager, usersManager, petsManager };

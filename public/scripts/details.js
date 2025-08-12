@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ product_id: productId }),
                 };
-                const url = "/api/carts"; // Ajusta la ruta si es necesario
+                const url = "/api/carts";
                 let response = await fetch(url, opts);
                 response = await response.json();
                 if (response.error) {

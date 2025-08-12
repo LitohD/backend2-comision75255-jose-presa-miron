@@ -1,7 +1,8 @@
-import { productsManager, usersManager, cartsManager } from "../dao/factory.js";
+import { productsManager, usersManager, cartsManager, petsManager } from "../dao/factory.js";
 import ProductsDTO from "../dto/products.dto.js";
 import CartsDTO from "../dto/carts.dto.js";
 import UsersDTO from "../dto/users.dto.js";
+import PetsDTO from "../dto/pets.dto.js";
 
 class Repository {
     constructor(manager, Dto) {
@@ -19,4 +20,6 @@ class Repository {
 const productsRepository = new Repository(productsManager, ProductsDTO);
 const cartsRepository = new Repository(cartsManager, CartsDTO);
 const usersRepository = new Repository(usersManager, UsersDTO);
-export { productsRepository, cartsRepository, usersRepository };
+const petsRepository = new Repository(petsManager, PetsDTO);
+
+export { productsRepository, cartsRepository, usersRepository, petsRepository };

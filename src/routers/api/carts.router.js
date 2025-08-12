@@ -1,15 +1,18 @@
 import RouterHelper from "../../helpers/router.helper.js";
-import cartController from "../../controllers/cart.controller.js";
+import cartsController from "../../controllers/cart.controller.js"
 
 class CartsRouter extends RouterHelper {
     constructor() {
         super();
         this.init();
-    }
+    };
     init = () => {
-        this.create("/", ["USER", "ADMIN"], cartController.createOne);
+        this.create("/:id", ["USER", "ADMIN"], cartsController.createOne);
+        this.read("/:id", ["USER", "ADMIN"], cartsController.readById);
+        this.read("/", ["USER", "ADMIN"], cartsController.readBy);
+        this.read("/all", ["USER", "ADMIN"], cartsController.readAll);
     }
 }
 
-const cartsRouter = new CartsRouter().getRouter();
+const cartsRouter = (new CartsRouter()).getRouter();
 export default cartsRouter;
