@@ -12,6 +12,8 @@ import cookieParser from "cookie-parser";
 import argvsHelper from "./helpers/argvs.helper.js";
 import dbConnect from "./helpers/dbConnect.helper.js";
 import cors from "cors"
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
 
 const server = express();
 const PORT = env.PORT;
@@ -29,6 +31,24 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, "../public")));
 server.use(morgan("dev"));
 server.use(cors({ origin: true, credentials: true }))
+
+// Swagger setup
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "API Documentación - Users",
+            version: "1.0.0",
+            description: "Documentación de los endpoints del módulo Users"
+        },
+        servers: [
+            { url: `http://localhost:${PORT}` }
+        ]
+    },
+    apis: [path.join(__dirname, "routers/api/users.router.js")],
+};
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+server.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 server.engine(
     "handlebars",
