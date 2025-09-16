@@ -8,6 +8,7 @@ import { engine } from "express-handlebars";
 import pathHandler from "./middlewares/pathHandler.mid.js";
 import errorHandler from "./middlewares/errorHandler.mid.js";
 import indexRouter from "./routers/index.router.js";
+import adoptionRouter from "./routers/api/adoption.router.js";
 import cookieParser from "cookie-parser";
 import argvsHelper from "./helpers/argvs.helper.js";
 import dbConnect from "./helpers/dbConnect.helper.js";
@@ -32,7 +33,6 @@ server.use(express.static(path.join(__dirname, "../public")));
 server.use(morgan("dev"));
 server.use(cors({ origin: true, credentials: true }))
 
-// Swagger setup
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
@@ -60,6 +60,7 @@ server.engine(
 );
 server.set("view engine", "handlebars");
 server.set("views", path.join(__dirname, "views"));
+server.use("/api/adoption", adoptionRouter);
 server.use("/", indexRouter);
 server.use(errorHandler);
 server.use(pathHandler); 
